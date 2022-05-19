@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'; 
-import helper from '../helpers/helpers.js'; 
+import helper from '../utils/helpers.js'; 
 import User from '../models/users.js'; 
 
 const home = (req, res) => {

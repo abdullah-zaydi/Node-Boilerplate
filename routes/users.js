@@ -1,4 +1,4 @@
-import helper from '../helpers/helpers.js'; 
+import helper from '../utils/helpers.js'; 
 import express from 'express';
 import userController from '../controllers/users.js';
 

@@ -1,48 +1,30 @@
-//#region LIBRARY IMPORTS
 import express from "express";
 import dotenv from 'dotenv';
-//#endregion
 
-//#region ROUTES IMPORTS
 import usersRoutes from "./routes/users.js";
+
 import mongoose from "mongoose";
-import helpers from "./helpers/helpers.js";
-//#endregion
+import helpers from "./utils/helpers.js";
+import { MongoUtil } from "./utils/MongoUtils.js";
 
-//#region DOTENV LIBRARY METHOD DECLARATION
 dotenv.config();
-//#endregion 
 
-//#region GLOBAL VARIABLES
 var PORT = process.env.PORT,
-DB_URL = process.env.DB_URL
-//#endregion
+    DB_URL = process.env.DB_URL
 
-//#region DATABASE CONNECTION
-mongoose.connect(DB_URL, () => console.log('database connected...'));
-//#endregion
+mongoose.connect(DB_URL, (err, db) => {
+    if (err) console.error(err);
+    let dbo = db.client.db('igive');
+    MongoUtil.getInstance(dbo);
+    console.log('Database Connected!');
+});
 
-//#region MIDDLEWARE FOR ACCESSING JSON DATA FROM BODY OF REQUESTS
 const app = express();
 app.use(express.json());
-//#endregion
 
-//#region ROUTES DECLARATION
 app.use("/api/users", usersRoutes);
-//#endregion
-
-//#region HOME ROUTE AND INVALID ROUTE DECLARATION
-
-// GameDataApi
-// app.get("/get", (req, res) => {
-//     // helpers.getGameApiData(req,res);
-// });
-
 
 app.get("/", (req, res) => res.send("Welcome to the Users API!"));
 app.all("*", (req, res) => res.status(404).send("You've tried reaching a route that doesn't exist."));
-//#endregion
 
-//#region SERVER STARTS HERE
-app.listen(PORT, () =>console.log(`Server running on port: http://localhost:${PORT}`));
-//#endregion
+app.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
